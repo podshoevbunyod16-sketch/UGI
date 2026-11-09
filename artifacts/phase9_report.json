@@ -1,0 +1,59 @@
+{
+  "report_schema_version": "1.0.0",
+  "report_type": "phase9_resilience_synthesis",
+  "source_input_hash": "818e4f5e799bc723afbc59cc695e58a99f9c4b94cfa8424cbca4adabb4f411cb",
+  "status": "verified",
+  "executive_summary": {
+    "verification": "verified",
+    "random_suite_passed": true,
+    "stress_protocol_passed": true,
+    "failure_modes": {
+      "baseline_actuator_saturation": 5,
+      "transferred_actuator_saturation": 6,
+      "baseline_unstable": 2,
+      "transferred_unstable": 2
+    },
+    "recommendation_count": 4
+  },
+  "recommendations": [
+    {
+      "priority": "critical",
+      "title": "Добавить safe fallback и gain scheduling для неустойчивых режимов",
+      "evidence": "В stress suite зафиксировано 4 событий instability: {'baseline_actuator_saturation': 5, 'transferred_actuator_saturation': 6, 'baseline_unstable': 2, 'transferred_unstable': 2}.",
+      "action": "Перед применением transferred policy проверять оценку closed-loop pole и переключаться на conservative controller при выходе за безопасный диапазон.",
+      "verification_experiment": "Сгенерировать boundary grid по state_a/input_b и проверить, что fallback удерживает max_abs_state < 100 без скрытия rejected cases."
+    },
+    {
+      "priority": "high",
+      "title": "Сделать policy actuator-aware и добавить anti-saturation режим",
+      "evidence": "Зафиксировано 11 событий actuator saturation в 6 stress cases.",
+      "action": "Добавить в objective явный penalty за saturation, ограничивать q по доступной authority и сохранять saturation ratio как отдельную метрику.",
+      "verification_experiment": "Сравнить текущую policy с actuator-aware policy на том же preregistered stress suite; критерий — снижение saturation rate без роста нестабильности."
+    },
+    {
+      "priority": "medium",
+      "title": "Расширить random suite за пределы текущих диапазонов",
+      "evidence": "Random suite прошёл: 20 systems, win rate=1.0, stable rate=1.0.",
+      "action": "Увеличить количество систем и preregistered диапазоны в сторону меньшего input_b и меньшего control_limit, сохраняя критерий до генерации.",
+      "verification_experiment": "Запустить новый независимый seed и сравнить win rate, stable rate и worst-case objective с текущим suite."
+    },
+    {
+      "priority": "medium",
+      "title": "Добавить uncertainty-aware evaluation для held-out сценариев",
+      "evidence": "Среднее held-out улучшение составило 16.52%.",
+      "action": "Ввести интервалы по seed и повторять каждый сценарий на нескольких независимых disturbance realizations.",
+      "verification_experiment": "Проверить, сохраняется ли нижняя граница доверительного интервала improvement выше нуля."
+    }
+  ],
+  "next_phase_experiments": [
+    "Actuator-aware controller with explicit saturation penalty.",
+    "Closed-loop pole guard and conservative fallback controller.",
+    "Multi-seed uncertainty intervals for held-out and zero-shot suites.",
+    "Independent environment family with changed disturbance dynamics."
+  ],
+  "limitations": [
+    "Recommendations are deterministic rule-based synthesis, not expert certification.",
+    "Evidence is limited to the computational simulations recorded in the source report.",
+    "No physical, safety-critical or production deployment decision is implied."
+  ]
+}

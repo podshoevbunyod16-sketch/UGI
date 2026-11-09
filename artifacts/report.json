@@ -1,0 +1,1624 @@
+{
+  "schema_version": "0.3.0",
+  "seed": 20261108,
+  "problem": {
+    "problem_id": "control-mvp-001",
+    "state_a": 1.08,
+    "input_b": 0.8,
+    "target": 0.0,
+    "horizon": 40,
+    "control_limit": 1.0,
+    "disturbance_scale": 1.0,
+    "invariants": [
+      "finite_state",
+      "bounded_control",
+      "valid_horizon"
+    ]
+  },
+  "representations": [
+    {
+      "representation_id": "R-proportional",
+      "kind": "proportional",
+      "parameters": {
+        "k": 0.85
+      },
+      "assumptions": [
+        "linear_dynamics"
+      ],
+      "invariants": [
+        "finite_state",
+        "bounded_control",
+        "valid_horizon"
+      ],
+      "parent_id": null,
+      "operator_id": null,
+      "operator_version": null
+    },
+    {
+      "representation_id": "R-damped",
+      "kind": "damped",
+      "parameters": {
+        "k": 0.62,
+        "d": 0.22
+      },
+      "assumptions": [
+        "linear_dynamics",
+        "observable_previous_state"
+      ],
+      "invariants": [
+        "finite_state",
+        "bounded_control",
+        "valid_horizon"
+      ],
+      "parent_id": null,
+      "operator_id": null,
+      "operator_version": null
+    },
+    {
+      "representation_id": "R-bounded",
+      "kind": "bounded",
+      "parameters": {
+        "k": 1.25
+      },
+      "assumptions": [
+        "linear_dynamics",
+        "actuator_saturation_allowed"
+      ],
+      "invariants": [
+        "finite_state",
+        "bounded_control",
+        "valid_horizon"
+      ],
+      "parent_id": null,
+      "operator_id": null,
+      "operator_version": null
+    },
+    {
+      "representation_id": "R-proportional::increase_gain::0.08",
+      "kind": "proportional",
+      "parameters": {
+        "k": 0.9299999999999999
+      },
+      "assumptions": [
+        "linear_dynamics"
+      ],
+      "invariants": [
+        "finite_state",
+        "bounded_control",
+        "valid_horizon"
+      ],
+      "parent_id": "R-proportional",
+      "operator_id": "increase_gain",
+      "operator_version": "1.0.0"
+    },
+    {
+      "representation_id": "R-proportional::add_damping::0.12",
+      "kind": "damped",
+      "parameters": {
+        "k": 0.85,
+        "d": 0.12
+      },
+      "assumptions": [
+        "linear_dynamics"
+      ],
+      "invariants": [
+        "finite_state",
+        "bounded_control",
+        "valid_horizon"
+      ],
+      "parent_id": "R-proportional",
+      "operator_id": "add_damping",
+      "operator_version": "1.0.0"
+    }
+  ],
+  "mutations": [
+    {
+      "mutation_id": "M-001",
+      "source_id": "R-proportional",
+      "output": {
+        "representation_id": "R-proportional::increase_gain::0.08",
+        "kind": "proportional",
+        "parameters": {
+          "k": 0.9299999999999999
+        },
+        "assumptions": [
+          "linear_dynamics"
+        ],
+        "invariants": [
+          "finite_state",
+          "bounded_control",
+          "valid_horizon"
+        ],
+        "parent_id": "R-proportional",
+        "operator_id": "increase_gain",
+        "operator_version": "1.0.0"
+      },
+      "changed_elements": {
+        "operator": "increase_gain",
+        "value": 0.08,
+        "parameters": {
+          "k": 0.9299999999999999
+        }
+      },
+      "preserved_invariants": [
+        "finite_state",
+        "bounded_control",
+        "valid_horizon"
+      ],
+      "violated_constraints": [],
+      "validation": "passed",
+      "error": null
+    },
+    {
+      "mutation_id": "M-002",
+      "source_id": "R-proportional",
+      "output": null,
+      "changed_elements": {
+        "operator": "increase_gain",
+        "value": 3.0,
+        "parameters": {
+          "k": 3.85
+        }
+      },
+      "preserved_invariants": [],
+      "violated_constraints": [
+        "closed_loop_not_stable"
+      ],
+      "validation": "rejected",
+      "error": "closed_loop_not_stable"
+    },
+    {
+      "mutation_id": "M-003",
+      "source_id": "R-proportional",
+      "output": {
+        "representation_id": "R-proportional::add_damping::0.12",
+        "kind": "damped",
+        "parameters": {
+          "k": 0.85,
+          "d": 0.12
+        },
+        "assumptions": [
+          "linear_dynamics"
+        ],
+        "invariants": [
+          "finite_state",
+          "bounded_control",
+          "valid_horizon"
+        ],
+        "parent_id": "R-proportional",
+        "operator_id": "add_damping",
+        "operator_version": "1.0.0"
+      },
+      "changed_elements": {
+        "operator": "add_damping",
+        "value": 0.12,
+        "parameters": {
+          "k": 0.85,
+          "d": 0.12
+        }
+      },
+      "preserved_invariants": [
+        "finite_state",
+        "bounded_control",
+        "valid_horizon"
+      ],
+      "violated_constraints": [],
+      "validation": "passed",
+      "error": null
+    }
+  ],
+  "causal_graph": {
+    "graph_id": "CG-control-001",
+    "nodes": [
+      "disturbance",
+      "state",
+      "control",
+      "next_state",
+      "objective"
+    ],
+    "edges": [
+      [
+        "disturbance",
+        "state"
+      ],
+      [
+        "state",
+        "control"
+      ],
+      [
+        "control",
+        "next_state"
+      ],
+      [
+        "next_state",
+        "objective"
+      ]
+    ],
+    "assumptions": [
+      "disturbance_is_observable",
+      "control_affects_next_state"
+    ],
+    "invariants": [
+      "acyclic",
+      "known_nodes",
+      "edge_endpoints_exist"
+    ]
+  },
+  "optimization_formulation": {
+    "formulation_id": "OPT-control-001",
+    "variables": [
+      "state_t",
+      "control_t",
+      "disturbance_t"
+    ],
+    "objective": {
+      "state_error": 1.0,
+      "control_effort": 0.05
+    },
+    "constraints": [
+      "state_next = 1.08*state + 0.8*control + disturbance",
+      "abs(control) <= 1.0",
+      "state_error = state - target"
+    ],
+    "assumptions": [
+      "finite_horizon",
+      "known_dynamics",
+      "bounded_actuator"
+    ],
+    "invariants": [
+      "objective_defined",
+      "constraints_defined",
+      "variables_defined"
+    ]
+  },
+  "transfers": [
+    {
+      "transfer_id": "T-001",
+      "source_model_id": "CG-control-001",
+      "target_model_id": "OPT-control-001",
+      "operator_id": "causal_edge_to_optimization_constraint",
+      "changed_elements": {
+        "added_edge": [
+          "disturbance",
+          "control"
+        ]
+      },
+      "preserved_invariants": [
+        "acyclic",
+        "known_nodes",
+        "edge_endpoints_exist"
+      ],
+      "violated_constraints": [],
+      "validation": "passed",
+      "output_model": {
+        "causal_graph": {
+          "graph_id": "CG-control-001::add_edge",
+          "nodes": [
+            "disturbance",
+            "state",
+            "control",
+            "next_state",
+            "objective"
+          ],
+          "edges": [
+            [
+              "disturbance",
+              "state"
+            ],
+            [
+              "state",
+              "control"
+            ],
+            [
+              "control",
+              "next_state"
+            ],
+            [
+              "next_state",
+              "objective"
+            ],
+            [
+              "disturbance",
+              "control"
+            ]
+          ],
+          "assumptions": [
+            "disturbance_is_observable",
+            "control_affects_next_state"
+          ],
+          "invariants": [
+            "acyclic",
+            "known_nodes",
+            "edge_endpoints_exist"
+          ]
+        },
+        "optimization": {
+          "formulation_id": "OPT-control-001::transfer",
+          "variables": [
+            "state_t",
+            "control_t",
+            "disturbance_t"
+          ],
+          "objective": {
+            "state_error": 1.0,
+            "control_effort": 0.05
+          },
+          "constraints": [
+            "state_next = 1.08*state + 0.8*control + disturbance",
+            "abs(control) <= 1.0",
+            "state_error = state - target",
+            "control policy may depend on disturbance_t"
+          ],
+          "assumptions": [
+            "finite_horizon",
+            "known_dynamics",
+            "bounded_actuator"
+          ],
+          "invariants": [
+            "objective_defined",
+            "constraints_defined",
+            "variables_defined"
+          ]
+        }
+      },
+      "error": null
+    },
+    {
+      "transfer_id": "T-002",
+      "source_model_id": "CG-control-001",
+      "target_model_id": "OPT-control-001",
+      "operator_id": "causal_edge_to_optimization_constraint",
+      "changed_elements": {
+        "added_edge": [
+          "next_state",
+          "state"
+        ]
+      },
+      "preserved_invariants": [],
+      "violated_constraints": [
+        "causal_cycle"
+      ],
+      "validation": "rejected",
+      "output_model": null,
+      "error": "causal_cycle"
+    }
+  ],
+  "optimization_comparison": {
+    "scenario": "alternating",
+    "baseline": {
+      "formulation_id": "OPT-control-001",
+      "scenario": "alternating",
+      "transferred": false,
+      "parameters": {
+        "k": 1.0,
+        "q": 0.0
+      },
+      "objective": 1.57266108,
+      "states": [
+        1.0,
+        0.4,
+        -0.008000000000000007,
+        0.11775999999999999,
+        -0.08702719999999999,
+        0.095632384,
+        -0.09322293247999999,
+        0.0938975789056,
+        -0.09370867790643199,
+        0.09376157018619904,
+        -0.09374676034786426,
+        0.09375090710259801,
+        -0.09374974601127255,
+        0.09375007111684368,
+        -0.09374998008728376,
+        0.09375000557556054,
+        -0.09374999843884305,
+        0.09375000043712393,
+        -0.0937499998776053,
+        0.0937500000342705,
+        -0.09374999999040426,
+        0.09375000000268681,
+        -0.0937499999992477,
+        0.09375000000021064,
+        -0.09374999999994102,
+        0.0937500000000165,
+        -0.09374999999999538,
+        0.09375000000000129,
+        -0.09374999999999964,
+        0.0937500000000001,
+        -0.09374999999999996,
+        0.09375,
+        -0.09375,
+        0.09375,
+        -0.09375,
+        0.09375,
+        -0.09375,
+        0.09375,
+        -0.09375,
+        0.09375,
+        -0.09375
+      ],
+      "controls": [
+        -1.0,
+        -0.4,
+        0.008000000000000007,
+        -0.11775999999999999,
+        0.08702719999999999,
+        -0.095632384,
+        0.09322293247999999,
+        -0.0938975789056,
+        0.09370867790643199,
+        -0.09376157018619904,
+        0.09374676034786426,
+        -0.09375090710259801,
+        0.09374974601127255,
+        -0.09375007111684368,
+        0.09374998008728376,
+        -0.09375000557556054,
+        0.09374999843884305,
+        -0.09375000043712393,
+        0.0937499998776053,
+        -0.0937500000342705,
+        0.09374999999040426,
+        -0.09375000000268681,
+        0.0937499999992477,
+        -0.09375000000021064,
+        0.09374999999994102,
+        -0.0937500000000165,
+        0.09374999999999538,
+        -0.09375000000000129,
+        0.09374999999999964,
+        -0.0937500000000001,
+        0.09374999999999996,
+        -0.09375,
+        0.09375,
+        -0.09375,
+        0.09375,
+        -0.09375,
+        0.09375,
+        -0.09375,
+        0.09375,
+        -0.09375
+      ],
+      "iterations": 14,
+      "converged": true
+    },
+    "transferred": {
+      "formulation_id": "OPT-control-001",
+      "scenario": "alternating",
+      "transferred": true,
+      "parameters": {
+        "k": 1.25976562,
+        "q": -1.08886719
+      },
+      "objective": 1.24958478,
+      "states": [
+        1.0,
+        0.4,
+        0.01340625000000012,
+        0.016436513671875014,
+        -0.014282239169311525,
+        0.01443775085996532,
+        -0.014426524859796258,
+        0.014427335236683464,
+        -0.014427276737601913,
+        0.014427280960504357,
+        -0.014427280655663594,
+        0.014427280677669282,
+        -0.014427280676080748,
+        0.01442728067619542,
+        -0.014427280676187135,
+        0.014427280676187731,
+        -0.014427280676187704,
+        0.014427280676187704,
+        -0.014427280676187704,
+        0.014427280676187704,
+        -0.014427280676187704,
+        0.014427280676187704,
+        -0.014427280676187704,
+        0.014427280676187704,
+        -0.014427280676187704,
+        0.014427280676187704,
+        -0.014427280676187704,
+        0.014427280676187704,
+        -0.014427280676187704,
+        0.014427280676187704,
+        -0.014427280676187704,
+        0.014427280676187704,
+        -0.014427280676187704,
+        0.014427280676187704,
+        -0.014427280676187704,
+        0.014427280676187704,
+        -0.014427280676187704,
+        0.014427280676187704,
+        -0.014427280676187704,
+        0.014427280676187704,
+        -0.014427280676187704
+      ],
+      "controls": [
+        -1.0,
+        -0.37324218749999993,
+        -0.14755279541015637,
+        0.10995790758132931,
+        -0.11267178854647278,
+        0.11247588026430148,
+        -0.11249002239342071,
+        0.11248900150847492,
+        -0.11248907520360696,
+        0.1124890698837396,
+        -0.11248907026776753,
+        0.11248907024004552,
+        -0.1124890702420467,
+        0.11248907024190224,
+        -0.11248907024191268,
+        0.11248907024191193,
+        -0.11248907024191196,
+        0.11248907024191196,
+        -0.11248907024191196,
+        0.11248907024191196,
+        -0.11248907024191196,
+        0.11248907024191196,
+        -0.11248907024191196,
+        0.11248907024191196,
+        -0.11248907024191196,
+        0.11248907024191196,
+        -0.11248907024191196,
+        0.11248907024191196,
+        -0.11248907024191196,
+        0.11248907024191196,
+        -0.11248907024191196,
+        0.11248907024191196,
+        -0.11248907024191196,
+        0.11248907024191196,
+        -0.11248907024191196,
+        0.11248907024191196,
+        -0.11248907024191196,
+        0.11248907024191196,
+        -0.11248907024191196,
+        0.11248907024191196
+      ],
+      "iterations": 28,
+      "converged": true
+    },
+    "absolute_improvement": 0.3230763,
+    "relative_improvement": 0.20543288,
+    "transfer_required": "accepted causal edge disturbance → control"
+  },
+  "held_out_evaluation": {
+    "train_scenario": "alternating",
+    "held_out_scenarios": [
+      "nominal",
+      "pulse",
+      "ramp"
+    ],
+    "cases": [
+      {
+        "scenario": "nominal",
+        "seed": 20261119,
+        "baseline_objective": 1.154437,
+        "transferred_objective": 1.14314533,
+        "absolute_improvement": 0.01129166,
+        "relative_improvement": 0.0097811,
+        "baseline_stable": true,
+        "transferred_stable": true
+      },
+      {
+        "scenario": "pulse",
+        "seed": 20261131,
+        "baseline_objective": 1.37633843,
+        "transferred_objective": 1.15082313,
+        "absolute_improvement": 0.2255153,
+        "relative_improvement": 0.16385163,
+        "baseline_stable": true,
+        "transferred_stable": true
+      },
+      {
+        "scenario": "ramp",
+        "seed": 20261145,
+        "baseline_objective": 1.61297176,
+        "transferred_objective": 1.09369198,
+        "absolute_improvement": 0.51927978,
+        "relative_improvement": 0.32193978,
+        "baseline_stable": true,
+        "transferred_stable": true
+      }
+    ],
+    "mean_absolute_improvement": 0.25202891,
+    "mean_relative_improvement": 0.16519084,
+    "transfer_wins": 3,
+    "transfer_wins_all": true,
+    "no_reoptimization": true,
+    "evaluation_budget": {
+      "optimizer": "coordinate_descent",
+      "max_iterations": 30,
+      "parameters_frozen": true
+    }
+  },
+  "environment_suite": {
+    "source_environment_id": "control-mvp-001",
+    "environment_ids": [
+      "env-fast",
+      "env-damped",
+      "env-weak-actuator"
+    ],
+    "cases": [
+      {
+        "environment_id": "env-fast",
+        "state_a": 1.18,
+        "input_b": 0.9,
+        "control_limit": 1.0,
+        "transfer_validation": "passed",
+        "baseline_objective": 1.57266108,
+        "transferred_objective": 1.24377487,
+        "absolute_improvement": 0.32888621,
+        "relative_improvement": 0.2091272,
+        "baseline_stable": true,
+        "transferred_stable": true
+      },
+      {
+        "environment_id": "env-damped",
+        "state_a": 0.94,
+        "input_b": 0.65,
+        "control_limit": 0.8,
+        "transfer_validation": "passed",
+        "baseline_objective": 1.64249166,
+        "transferred_objective": 1.3855658,
+        "absolute_improvement": 0.25692586,
+        "relative_improvement": 0.15642445,
+        "baseline_stable": true,
+        "transferred_stable": true
+      },
+      {
+        "environment_id": "env-weak-actuator",
+        "state_a": 1.08,
+        "input_b": 0.45,
+        "control_limit": 0.7,
+        "transfer_validation": "passed",
+        "baseline_objective": 2.55122927,
+        "transferred_objective": 2.34352808,
+        "absolute_improvement": 0.20770119,
+        "relative_improvement": 0.0814122,
+        "baseline_stable": true,
+        "transferred_stable": true
+      }
+    ],
+    "transfer_wins": 3,
+    "transfer_wins_all": true,
+    "mean_absolute_improvement": 0.26450442,
+    "mean_relative_improvement": 0.14898795,
+    "recalibrated_per_environment": true,
+    "evaluation_budget": {
+      "optimizer": "coordinate_descent",
+      "max_iterations": 30,
+      "scenario": "alternating",
+      "same_operator": "causal_edge_to_optimization_constraint"
+    }
+  },
+  "zero_shot_evaluation": {
+    "source_environment_id": "control-mvp-001",
+    "source_parameters": {
+      "baseline": {
+        "k": 1.0,
+        "q": 0.0
+      },
+      "transferred": {
+        "k": 1.25976562,
+        "q": -1.08886719
+      }
+    },
+    "scenario": "alternating",
+    "environment_ids": [
+      "env-fast",
+      "env-damped",
+      "env-weak-actuator"
+    ],
+    "cases": [
+      {
+        "environment_id": "env-fast",
+        "state_a": 1.18,
+        "input_b": 0.9,
+        "control_limit": 1.0,
+        "transfer_validation": "passed",
+        "baseline_objective": 1.57266108,
+        "transferred_objective": 1.24875703,
+        "absolute_improvement": 0.32390406,
+        "relative_improvement": 0.20595922,
+        "baseline_stable": true,
+        "transferred_stable": true,
+        "parameters_frozen": true
+      },
+      {
+        "environment_id": "env-damped",
+        "state_a": 0.94,
+        "input_b": 0.65,
+        "control_limit": 0.8,
+        "transfer_validation": "passed",
+        "baseline_objective": 1.69173403,
+        "transferred_objective": 1.3940379,
+        "absolute_improvement": 0.29769613,
+        "relative_improvement": 0.175971,
+        "baseline_stable": true,
+        "transferred_stable": true,
+        "parameters_frozen": true
+      },
+      {
+        "environment_id": "env-weak-actuator",
+        "state_a": 1.08,
+        "input_b": 0.45,
+        "control_limit": 0.7,
+        "transfer_validation": "passed",
+        "baseline_objective": 2.61267514,
+        "transferred_objective": 2.37386697,
+        "absolute_improvement": 0.23880817,
+        "relative_improvement": 0.0914037,
+        "baseline_stable": true,
+        "transferred_stable": true,
+        "parameters_frozen": true
+      }
+    ],
+    "transfer_wins": 3,
+    "transfer_wins_all": true,
+    "mean_absolute_improvement": 0.28680279,
+    "mean_relative_improvement": 0.15777797,
+    "no_reoptimization": true,
+    "evaluation_budget": {
+      "optimizer": "none_during_evaluation",
+      "parameters_frozen": true,
+      "source_training_scenario": "alternating",
+      "same_operator": "causal_edge_to_optimization_constraint"
+    }
+  },
+  "random_zero_shot_suite": {
+    "generation_seed": 424242,
+    "requested_count": 20,
+    "generated_count": 20,
+    "generation_ranges": {
+      "state_a": [
+        0.88,
+        1.2
+      ],
+      "input_b": [
+        0.35,
+        1.1
+      ],
+      "control_limit": [
+        0.6,
+        1.2
+      ],
+      "disturbance_scale": [
+        0.7,
+        1.3
+      ]
+    },
+    "preregistered_criterion": {
+      "min_target_count": 20,
+      "min_transfer_win_rate": 0.75,
+      "min_stable_rate": 0.95,
+      "min_mean_relative_improvement": 0.0,
+      "registered_before_generation": true
+    },
+    "cases": [
+      {
+        "environment_id": "random-env-001",
+        "state_a": 1.04141837,
+        "input_b": 0.51997572,
+        "control_limit": 1.02158765,
+        "transfer_validation": "passed",
+        "baseline_objective": 1.74351788,
+        "transferred_objective": 1.55626275,
+        "absolute_improvement": 0.18725513,
+        "relative_improvement": 0.10740075,
+        "baseline_stable": true,
+        "transferred_stable": true,
+        "parameters_frozen": true
+      },
+      {
+        "environment_id": "random-env-002",
+        "state_a": 0.98918766,
+        "input_b": 0.99264804,
+        "control_limit": 1.12888888,
+        "transfer_validation": "passed",
+        "baseline_objective": 1.81412241,
+        "transferred_objective": 1.12471776,
+        "absolute_improvement": 0.68940465,
+        "relative_improvement": 0.38002102,
+        "baseline_stable": true,
+        "transferred_stable": true,
+        "parameters_frozen": true
+      },
+      {
+        "environment_id": "random-env-003",
+        "state_a": 0.99114363,
+        "input_b": 0.65256054,
+        "control_limit": 0.87212468,
+        "transfer_validation": "passed",
+        "baseline_objective": 1.53607057,
+        "transferred_objective": 1.35768877,
+        "absolute_improvement": 0.1783818,
+        "relative_improvement": 0.11612865,
+        "baseline_stable": true,
+        "transferred_stable": true,
+        "parameters_frozen": true
+      },
+      {
+        "environment_id": "random-env-004",
+        "state_a": 1.11274106,
+        "input_b": 0.84759305,
+        "control_limit": 0.8558123,
+        "transfer_validation": "passed",
+        "baseline_objective": 1.52431754,
+        "transferred_objective": 1.30449226,
+        "absolute_improvement": 0.21982528,
+        "relative_improvement": 0.14421226,
+        "baseline_stable": true,
+        "transferred_stable": true,
+        "parameters_frozen": true
+      },
+      {
+        "environment_id": "random-env-005",
+        "state_a": 1.07280232,
+        "input_b": 0.36938903,
+        "control_limit": 0.93699243,
+        "transfer_validation": "passed",
+        "baseline_objective": 2.5405811,
+        "transferred_objective": 2.25373887,
+        "absolute_improvement": 0.28684223,
+        "relative_improvement": 0.11290418,
+        "baseline_stable": true,
+        "transferred_stable": true,
+        "parameters_frozen": true
+      },
+      {
+        "environment_id": "random-env-006",
+        "state_a": 1.09294329,
+        "input_b": 1.07584408,
+        "control_limit": 0.94461451,
+        "transfer_validation": "passed",
+        "baseline_objective": 1.88307303,
+        "transferred_objective": 1.20424142,
+        "absolute_improvement": 0.67883161,
+        "relative_improvement": 0.36049139,
+        "baseline_stable": true,
+        "transferred_stable": true,
+        "parameters_frozen": true
+      },
+      {
+        "environment_id": "random-env-007",
+        "state_a": 0.93310673,
+        "input_b": 0.72383455,
+        "control_limit": 1.14285045,
+        "transfer_validation": "passed",
+        "baseline_objective": 1.53231883,
+        "transferred_objective": 1.15572134,
+        "absolute_improvement": 0.3765975,
+        "relative_improvement": 0.24576967,
+        "baseline_stable": true,
+        "transferred_stable": true,
+        "parameters_frozen": true
+      },
+      {
+        "environment_id": "random-env-008",
+        "state_a": 1.00250612,
+        "input_b": 0.89314678,
+        "control_limit": 0.91240784,
+        "transfer_validation": "passed",
+        "baseline_objective": 1.87596685,
+        "transferred_objective": 1.20481771,
+        "absolute_improvement": 0.67114914,
+        "relative_improvement": 0.35776173,
+        "baseline_stable": true,
+        "transferred_stable": true,
+        "parameters_frozen": true
+      },
+      {
+        "environment_id": "random-env-009",
+        "state_a": 1.13989104,
+        "input_b": 0.82251111,
+        "control_limit": 0.68217426,
+        "transfer_validation": "passed",
+        "baseline_objective": 1.92814029,
+        "transferred_objective": 1.59157669,
+        "absolute_improvement": 0.3365636,
+        "relative_improvement": 0.17455348,
+        "baseline_stable": true,
+        "transferred_stable": true,
+        "parameters_frozen": true
+      },
+      {
+        "environment_id": "random-env-010",
+        "state_a": 1.18116337,
+        "input_b": 0.68923006,
+        "control_limit": 0.65591686,
+        "transfer_validation": "passed",
+        "baseline_objective": 2.27296383,
+        "transferred_objective": 2.01592944,
+        "absolute_improvement": 0.25703439,
+        "relative_improvement": 0.11308336,
+        "baseline_stable": true,
+        "transferred_stable": true,
+        "parameters_frozen": true
+      },
+      {
+        "environment_id": "random-env-011",
+        "state_a": 0.90400746,
+        "input_b": 0.91353133,
+        "control_limit": 1.08513452,
+        "transfer_validation": "passed",
+        "baseline_objective": 1.41307993,
+        "transferred_objective": 1.07826583,
+        "absolute_improvement": 0.3348141,
+        "relative_improvement": 0.23693925,
+        "baseline_stable": true,
+        "transferred_stable": true,
+        "parameters_frozen": true
+      },
+      {
+        "environment_id": "random-env-012",
+        "state_a": 1.01230153,
+        "input_b": 0.73617099,
+        "control_limit": 1.07859049,
+        "transfer_validation": "passed",
+        "baseline_objective": 1.3963285,
+        "transferred_objective": 1.18032154,
+        "absolute_improvement": 0.21600695,
+        "relative_improvement": 0.15469637,
+        "baseline_stable": true,
+        "transferred_stable": true,
+        "parameters_frozen": true
+      },
+      {
+        "environment_id": "random-env-013",
+        "state_a": 0.88718741,
+        "input_b": 0.91881688,
+        "control_limit": 0.82684946,
+        "transfer_validation": "passed",
+        "baseline_objective": 1.85082421,
+        "transferred_objective": 1.14502851,
+        "absolute_improvement": 0.7057957,
+        "relative_improvement": 0.38134129,
+        "baseline_stable": true,
+        "transferred_stable": true,
+        "parameters_frozen": true
+      },
+      {
+        "environment_id": "random-env-014",
+        "state_a": 1.16729605,
+        "input_b": 0.43563911,
+        "control_limit": 1.01674744,
+        "transfer_validation": "passed",
+        "baseline_objective": 2.87156137,
+        "transferred_objective": 2.39864643,
+        "absolute_improvement": 0.47291494,
+        "relative_improvement": 0.16468913,
+        "baseline_stable": true,
+        "transferred_stable": true,
+        "parameters_frozen": true
+      },
+      {
+        "environment_id": "random-env-015",
+        "state_a": 1.1265695,
+        "input_b": 0.48911777,
+        "control_limit": 1.0458653,
+        "transfer_validation": "passed",
+        "baseline_objective": 2.11427894,
+        "transferred_objective": 1.83497994,
+        "absolute_improvement": 0.279299,
+        "relative_improvement": 0.1321013,
+        "baseline_stable": true,
+        "transferred_stable": true,
+        "parameters_frozen": true
+      },
+      {
+        "environment_id": "random-env-016",
+        "state_a": 1.13499558,
+        "input_b": 0.92387356,
+        "control_limit": 1.08198108,
+        "transfer_validation": "passed",
+        "baseline_objective": 1.39135858,
+        "transferred_objective": 1.13322147,
+        "absolute_improvement": 0.25813711,
+        "relative_improvement": 0.18552881,
+        "baseline_stable": true,
+        "transferred_stable": true,
+        "parameters_frozen": true
+      },
+      {
+        "environment_id": "random-env-017",
+        "state_a": 0.95478537,
+        "input_b": 0.44280287,
+        "control_limit": 0.79124468,
+        "transfer_validation": "passed",
+        "baseline_objective": 1.87696569,
+        "transferred_objective": 1.70899375,
+        "absolute_improvement": 0.16797194,
+        "relative_improvement": 0.08949121,
+        "baseline_stable": true,
+        "transferred_stable": true,
+        "parameters_frozen": true
+      },
+      {
+        "environment_id": "random-env-018",
+        "state_a": 0.89258787,
+        "input_b": 0.71773565,
+        "control_limit": 1.15829188,
+        "transfer_validation": "passed",
+        "baseline_objective": 1.54790984,
+        "transferred_objective": 1.14367769,
+        "absolute_improvement": 0.40423214,
+        "relative_improvement": 0.26114709,
+        "baseline_stable": true,
+        "transferred_stable": true,
+        "parameters_frozen": true
+      },
+      {
+        "environment_id": "random-env-019",
+        "state_a": 0.96480741,
+        "input_b": 0.96430887,
+        "control_limit": 0.69108803,
+        "transfer_validation": "passed",
+        "baseline_objective": 1.50477573,
+        "transferred_objective": 1.2114758,
+        "absolute_improvement": 0.29329993,
+        "relative_improvement": 0.19491272,
+        "baseline_stable": true,
+        "transferred_stable": true,
+        "parameters_frozen": true
+      },
+      {
+        "environment_id": "random-env-020",
+        "state_a": 1.03790101,
+        "input_b": 0.55163875,
+        "control_limit": 1.00135221,
+        "transfer_validation": "passed",
+        "baseline_objective": 1.73456918,
+        "transferred_objective": 1.52631922,
+        "absolute_improvement": 0.20824997,
+        "relative_improvement": 0.12005861,
+        "baseline_stable": true,
+        "transferred_stable": true,
+        "parameters_frozen": true
+      }
+    ],
+    "transfer_win_rate": 1.0,
+    "stable_rate": 1.0,
+    "mean_relative_improvement": 0.20166161,
+    "passed": true,
+    "no_reoptimization": true
+  },
+  "stress_suite": {
+    "source_environment_id": "control-mvp-001",
+    "scenario": "alternating",
+    "cases": [
+      {
+        "environment_id": "boundary-high-a",
+        "category": "boundary",
+        "state_a": 1.2,
+        "input_b": 0.35,
+        "control_limit": 0.6,
+        "disturbance_scale": 1.3,
+        "transfer_validation": "passed",
+        "baseline_objective": 3521.46192615,
+        "transferred_objective": 3521.46192615,
+        "absolute_improvement": 0.0,
+        "relative_improvement": 0.0,
+        "baseline_stable": true,
+        "transferred_stable": true,
+        "baseline_saturated": true,
+        "transferred_saturated": true,
+        "failure_modes": [
+          "baseline_actuator_saturation",
+          "transferred_actuator_saturation"
+        ]
+      },
+      {
+        "environment_id": "boundary-low-b",
+        "category": "boundary",
+        "state_a": 1.05,
+        "input_b": 0.35,
+        "control_limit": 1.2,
+        "disturbance_scale": 1.0,
+        "transfer_validation": "passed",
+        "baseline_objective": 2.48064315,
+        "transferred_objective": 2.05391528,
+        "absolute_improvement": 0.42672787,
+        "relative_improvement": 0.17202308,
+        "baseline_stable": true,
+        "transferred_stable": true,
+        "baseline_saturated": false,
+        "transferred_saturated": true,
+        "failure_modes": [
+          "transferred_actuator_saturation"
+        ]
+      },
+      {
+        "environment_id": "boundary-low-limit",
+        "category": "boundary",
+        "state_a": 1.08,
+        "input_b": 0.8,
+        "control_limit": 0.2,
+        "disturbance_scale": 1.3,
+        "transfer_validation": "passed",
+        "baseline_objective": 5.69882007,
+        "transferred_objective": 5.26483568,
+        "absolute_improvement": 0.43398439,
+        "relative_improvement": 0.07615338,
+        "baseline_stable": true,
+        "transferred_stable": true,
+        "baseline_saturated": true,
+        "transferred_saturated": true,
+        "failure_modes": [
+          "baseline_actuator_saturation",
+          "transferred_actuator_saturation"
+        ]
+      },
+      {
+        "environment_id": "adversarial-unstable",
+        "category": "adversarial",
+        "state_a": 1.3,
+        "input_b": 0.2,
+        "control_limit": 0.35,
+        "disturbance_scale": 2.0,
+        "transfer_validation": "passed",
+        "baseline_objective": 2424193563.0473776,
+        "transferred_objective": 2424193563.0473776,
+        "absolute_improvement": 0.0,
+        "relative_improvement": 0.0,
+        "baseline_stable": false,
+        "transferred_stable": false,
+        "baseline_saturated": true,
+        "transferred_saturated": true,
+        "failure_modes": [
+          "baseline_unstable",
+          "transferred_unstable",
+          "baseline_actuator_saturation",
+          "transferred_actuator_saturation"
+        ]
+      },
+      {
+        "environment_id": "adversarial-saturation",
+        "category": "adversarial",
+        "state_a": 1.25,
+        "input_b": 0.35,
+        "control_limit": 0.25,
+        "disturbance_scale": 2.5,
+        "transfer_validation": "passed",
+        "baseline_objective": 96489639.0603273,
+        "transferred_objective": 96489639.0603273,
+        "absolute_improvement": 0.0,
+        "relative_improvement": 0.0,
+        "baseline_stable": false,
+        "transferred_stable": false,
+        "baseline_saturated": true,
+        "transferred_saturated": true,
+        "failure_modes": [
+          "baseline_unstable",
+          "transferred_unstable",
+          "baseline_actuator_saturation",
+          "transferred_actuator_saturation"
+        ]
+      },
+      {
+        "environment_id": "adversarial-low-authority",
+        "category": "adversarial",
+        "state_a": 0.95,
+        "input_b": 0.1,
+        "control_limit": 0.2,
+        "disturbance_scale": 3.0,
+        "transfer_validation": "passed",
+        "baseline_objective": 10.88869771,
+        "transferred_objective": 10.69138853,
+        "absolute_improvement": 0.19730918,
+        "relative_improvement": 0.01812055,
+        "baseline_stable": true,
+        "transferred_stable": true,
+        "baseline_saturated": true,
+        "transferred_saturated": true,
+        "failure_modes": [
+          "baseline_actuator_saturation",
+          "transferred_actuator_saturation"
+        ]
+      }
+    ],
+    "preregistered_criterion": {
+      "min_case_count": 6,
+      "min_failure_cases_to_detect": 1,
+      "require_boundary_cases": true,
+      "require_adversarial_cases": true,
+      "registered_before_evaluation": true
+    },
+    "failure_case_count": 6,
+    "stress_detected": true,
+    "passed": true,
+    "no_reoptimization": true
+  },
+  "hypotheses": [
+    {
+      "hypothesis_id": "H1",
+      "statement": "Увеличение gain быстрее уменьшает ошибку без насыщения.",
+      "prediction": "Высокий gain даст меньшее settling_time в сценарии без сильного возмущения.",
+      "discriminating_scenario": "nominal",
+      "provenance": [
+        "R-proportional",
+        "R-bounded"
+      ]
+    },
+    {
+      "hypothesis_id": "H2",
+      "statement": "Демпфирование улучшает устойчивость при переменном возмущении.",
+      "prediction": "Damped-контроллер даст меньший max_abs_state в сценарии alternating.",
+      "discriminating_scenario": "alternating",
+      "provenance": [
+        "R-damped",
+        "R-proportional"
+      ]
+    },
+    {
+      "hypothesis_id": "H3",
+      "statement": "Ограничение актуатора повышает безопасность ценой скорости.",
+      "prediction": "Bounded-контроллер уменьшит max_abs_control, но увеличит settling_time.",
+      "discriminating_scenario": "pulse",
+      "provenance": [
+        "R-bounded",
+        "R-proportional"
+      ]
+    }
+  ],
+  "experiment": {
+    "selected_scenario": "alternating",
+    "information_gain_proxy": 0.57897015,
+    "rationale": "Alternating disturbance maximizes divergence between damping and direct feedback predictions.",
+    "simulations": [
+      {
+        "representation_id": "R-proportional",
+        "scenario": "alternating",
+        "seed": 20261108,
+        "states": [
+          1.0,
+          0.52,
+          0.08800000000000008,
+          0.15520000000000003,
+          -0.057919999999999985,
+          0.096832,
+          -0.08126719999999998,
+          0.08749312,
+          -0.085002752,
+          0.08599889919999999,
+          -0.08560044032,
+          0.085759823872,
+          -0.08569607045119998,
+          0.08572157181952,
+          -0.08571137127219199,
+          0.0857154514911232,
+          -0.08571381940355072,
+          0.0857144722385797,
+          -0.08571421110456812,
+          0.08571431555817274,
+          -0.08571427377673091,
+          0.08571429048930763,
+          -0.08571428380427693,
+          0.08571428647828921,
+          -0.08571428540868431,
+          0.08571428583652627,
+          -0.08571428566538948,
+          0.08571428573384421,
+          -0.0857142857064623,
+          0.08571428571741506,
+          -0.08571428571303397,
+          0.0857142857147864,
+          -0.08571428571408543,
+          0.08571428571436582,
+          -0.08571428571425367,
+          0.08571428571429851,
+          -0.0857142857142806,
+          0.08571428571428776,
+          -0.0857142857142849,
+          0.08571428571428603,
+          -0.08571428571428558
+        ],
+        "controls": [
+          -0.85,
+          -0.442,
+          -0.07480000000000006,
+          -0.13192000000000004,
+          0.049231999999999984,
+          -0.0823072,
+          0.06907711999999998,
+          -0.074369152,
+          0.0722523392,
+          -0.07309906431999999,
+          0.072760374272,
+          -0.07289585029119999,
+          0.07284165988351998,
+          -0.072863336046592,
+          0.07285466558136319,
+          -0.07285813376745472,
+          0.07285674649301811,
+          -0.07285730140279274,
+          0.0728570794388829,
+          -0.07285716822444684,
+          0.07285713271022128,
+          -0.07285714691591148,
+          0.07285714123363539,
+          -0.07285714350654583,
+          0.07285714259738166,
+          -0.07285714296104732,
+          0.07285714281558106,
+          -0.07285714287376757,
+          0.07285714285049295,
+          -0.0728571428598028,
+          0.07285714285607887,
+          -0.07285714285756843,
+          0.07285714285697262,
+          -0.07285714285721094,
+          0.07285714285711561,
+          -0.07285714285715374,
+          0.0728571428571385,
+          -0.07285714285714459,
+          0.07285714285714216,
+          -0.07285714285714313
+        ],
+        "cost": 1.6280921282798833,
+        "settling_time": 41,
+        "max_abs_state": 1.0,
+        "stable": true,
+        "error": null
+      },
+      {
+        "representation_id": "R-damped",
+        "scenario": "alternating",
+        "seed": 20261108,
+        "states": [
+          1.0,
+          0.7040000000000001,
+          0.3432320000000001,
+          0.3839426560000001,
+          0.0970574356480001,
+          0.22717334120038407,
+          -0.01023116811619526,
+          0.1558081914598599,
+          -0.05823094347282751,
+          0.12366401676002171,
+          -0.07979372721312879,
+          0.10920902624680727,
+          -0.0894864132808133,
+          0.10271033200086625,
+          -0.09384379328106972,
+          0.099788750773476,
+          -0.09580269730189005,
+          0.09847531963696064,
+          -0.0966833443132527,
+          0.09788485177629797,
+          -0.0970792490744029,
+          0.09761940029027205,
+          -0.0972572325186639,
+          0.09750006358347302,
+          -0.09733724698122785,
+          0.09744641442235029,
+          -0.09737321838437718,
+          0.09742229583750775,
+          -0.09738938973394723,
+          0.09741145305595088,
+          -0.09739665974634676,
+          0.09740657856133787,
+          -0.09739992806233118,
+          0.09740438717736434,
+          -0.09740139737060563,
+          0.09740340201600901,
+          -0.0974020579146949,
+          0.09740295912562205,
+          -0.0974023548697325,
+          0.09740276001925861,
+          -0.09740248836921539
+        ],
+        "controls": [
+          -0.62,
+          -0.37136,
+          -0.13343488000000003,
+          -0.24700079104000006,
+          0.0029391383756799463,
+          -0.1694729707657626,
+          0.05857231628168852,
+          -0.13312973781184528,
+          0.08319179463834428,
+          -0.1166885816424403,
+          0.09423281454623296,
+          -0.10929020203420645,
+          0.09919457293018077,
+          -0.10596368980250659,
+          0.10142505939628914,
+          -0.10446818517155518,
+          0.10242779090375237,
+          -0.10379586190146275,
+          0.10287857954326361,
+          -0.1034936112410059,
+          0.103081236613284,
+          -0.10335773104019716,
+          0.10317234337953754,
+          -0.1032966445642234,
+          0.10321330145259547,
+          -0.10326918245064437,
+          0.10323171461579389,
+          -0.1032568365480695,
+          0.10323999246076737,
+          -0.10325128630846714,
+          0.10324371385924047,
+          -0.10324879113572011,
+          0.10324538685585252,
+          -0.1032476694026989,
+          0.10324613897032889,
+          -0.1032471651149808,
+          0.1032464770918657,
+          -0.1032469384067554,
+          0.10324662909821217,
+          -0.10324683648751838
+        ],
+        "cost": 2.207062277263205,
+        "settling_time": 41,
+        "max_abs_state": 1.0,
+        "stable": true,
+        "error": null
+      },
+      {
+        "representation_id": "R-bounded",
+        "scenario": "alternating",
+        "seed": 20261108,
+        "states": [
+          1.0,
+          0.4,
+          -0.08799999999999997,
+          0.11295999999999999,
+          -0.1109632,
+          0.11112294399999999,
+          -0.11111016448,
+          0.11111118684159998,
+          -0.111111105052672,
+          0.11111111159578622,
+          -0.1111111110723371,
+          0.11111111111421303,
+          -0.11111111111086296,
+          0.11111111111113096,
+          -0.11111111111110952,
+          0.11111111111111123,
+          -0.11111111111111109,
+          0.11111111111111112,
+          -0.1111111111111111,
+          0.11111111111111112,
+          -0.1111111111111111,
+          0.11111111111111112,
+          -0.1111111111111111,
+          0.11111111111111112,
+          -0.1111111111111111,
+          0.11111111111111112,
+          -0.1111111111111111,
+          0.11111111111111112,
+          -0.1111111111111111,
+          0.11111111111111112,
+          -0.1111111111111111,
+          0.11111111111111112,
+          -0.1111111111111111,
+          0.11111111111111112,
+          -0.1111111111111111,
+          0.11111111111111112,
+          -0.1111111111111111,
+          0.11111111111111112,
+          -0.1111111111111111,
+          0.11111111111111112,
+          -0.1111111111111111
+        ],
+        "controls": [
+          -1.0,
+          -0.5,
+          0.10999999999999996,
+          -0.1412,
+          0.138704,
+          -0.13890367999999997,
+          0.1388877056,
+          -0.13888898355199997,
+          0.13888888131583998,
+          -0.13888888949473277,
+          0.13888888884042136,
+          -0.1388888888927663,
+          0.1388888888885787,
+          -0.1388888888889137,
+          0.1388888888888869,
+          -0.13888888888888903,
+          0.13888888888888887,
+          -0.1388888888888889,
+          0.1388888888888889,
+          -0.1388888888888889,
+          0.1388888888888889,
+          -0.1388888888888889,
+          0.1388888888888889,
+          -0.1388888888888889,
+          0.1388888888888889,
+          -0.1388888888888889,
+          0.1388888888888889,
+          -0.1388888888888889,
+          0.1388888888888889,
+          -0.1388888888888889,
+          0.1388888888888889,
+          -0.1388888888888889,
+          0.1388888888888889,
+          -0.1388888888888889,
+          0.1388888888888889,
+          -0.1388888888888889,
+          0.1388888888888889,
+          -0.1388888888888889,
+          0.1388888888888889,
+          -0.1388888888888889
+        ],
+        "cost": 1.736085390946502,
+        "settling_time": 41,
+        "max_abs_state": 1.0,
+        "stable": true,
+        "error": null
+      }
+    ],
+    "ranking": [
+      {
+        "representation_id": "R-proportional",
+        "cost": 1.62809213,
+        "settling_time": 41,
+        "max_abs_state": 1.0,
+        "stable": true
+      },
+      {
+        "representation_id": "R-bounded",
+        "cost": 1.73608539,
+        "settling_time": 41,
+        "max_abs_state": 1.0,
+        "stable": true
+      },
+      {
+        "representation_id": "R-damped",
+        "cost": 2.20706228,
+        "settling_time": 41,
+        "max_abs_state": 1.0,
+        "stable": true
+      }
+    ]
+  },
+  "verification": {
+    "checks": {
+      "representations_at_least_three": true,
+      "causal_graph_present": true,
+      "optimization_formulation_present": true,
+      "valid_cross_model_transfer_exists": true,
+      "rejected_cross_model_transfer_exists": true,
+      "optimization_comparison_exists": true,
+      "transferred_objective_improves": true,
+      "held_out_evaluation_exists": true,
+      "held_out_has_multiple_scenarios": true,
+      "held_out_parameters_frozen": true,
+      "environment_suite_exists": true,
+      "environment_suite_has_multiple_systems": true,
+      "environment_transfer_wins_recorded": true,
+      "zero_shot_evaluation_exists": true,
+      "zero_shot_has_multiple_targets": true,
+      "zero_shot_parameters_frozen": true,
+      "zero_shot_transfer_result_recorded": true,
+      "random_zero_shot_suite_exists": true,
+      "random_suite_criterion_preregistered": true,
+      "random_suite_has_required_count": true,
+      "random_suite_passed_criterion": true,
+      "stress_suite_exists": true,
+      "stress_suite_detected_failure_mode": true,
+      "stress_suite_passed_protocol": true,
+      "stress_suite_no_reoptimization": true,
+      "hypotheses_at_least_two": true,
+      "valid_mutation_exists": true,
+      "rejected_mutation_exists": true,
+      "experiment_exists": true,
+      "all_experiment_runs_stable": true,
+      "reproducible_seed_recorded": true
+    },
+    "passed": 31,
+    "total": 31,
+    "status": "verified"
+  },
+  "limitations": [
+    "Computational simulation only; no physical experiment.",
+    "Novelty and patent status were not established.",
+    "Benchmark is intentionally small and domain-specific."
+  ],
+  "input_hash": "818e4f5e799bc723afbc59cc695e58a99f9c4b94cfa8424cbca4adabb4f411cb"
+}
